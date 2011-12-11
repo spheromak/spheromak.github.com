@@ -4,7 +4,7 @@
 
 url: http://spheromak.github.com
 title: f00bar.com
-subtitle: stuff
+subtitle: dev += ops
 author: Jesse Nelson
 simple_search: http://google.com/search
 
@@ -57,13 +57,13 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.ht
 # ----------------------- #
 
 # Github repositories
-github_user: "spheromak"
+github_user: spheromak
 github_repo_count: 3
 github_show_profile_link: true
 github_skip_forks: true
 
 # Twitter
-twitter_user: "spheormak"
+twitter_user: spheormak
 twitter_tweet_count: 4
 twitter_show_replies: false
 twitter_follow_button: true
@@ -92,7 +92,7 @@ disqus_short_name:
 disqus_show_comment_count: false
 
 # Google Analytics
-google_analytics_tracking_id: "UA-6010336-3"
+google_analytics_tracking_id: UA-6010336-3
 
 # Facebook Like
 facebook_like: true
