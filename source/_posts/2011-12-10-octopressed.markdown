@@ -6,7 +6,7 @@ comments: true
 categories:  blog github jekyll markdown octopress
 ---
 
- Posterous just doesn't support markdown very well, and every time I felt like writing a blog entry I would gt frustrated. So after a couple people have expressed their pleasure with tools like [jekyll](http://jekyllrb.com/) using github pages.  I decided to give it a go.
+ Posterous just doesn't support markdown very well, and every time I felt like writing a blog entry I would get frustrated. So after a couple people have expressed their pleasure with tools like [jekyll](http://jekyllrb.com/) using github pages.  I decided to give it a go.
 
 I love this setup. I tried jumping in with [octopress](http://octopress.org/) without the rtfm. Having never setup github pages before i mucked up by creating a project site vs a user site, but once I fixed that (by creating a spheromak.github.com repo) everything clicked in.
 
