@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: chef | f00bar.com]]></title>
+  <link href="http://spheromak.github.com/blog/categories/chef/atom.xml" rel="self"/>
+  <link href="http://spheromak.github.com/"/>
+  <updated>2012-11-01T23:06:59-07:00</updated>
+  <id>http://spheromak.github.com/</id>
+  <author>
+    <name><![CDATA[Jesse Nelson]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[chef-sandbox: chef-server playground]]></title>
+    <link href="http://spheromak.github.com/blog/2012/11/01/chef-sandbox-chef-server-auto-playground/"/>
+    <updated>2012-11-01T21:20:00-07:00</updated>
+    <id>http://spheromak.github.com/blog/2012/11/01/chef-sandbox-chef-server-auto-playground</id>
+    <content type="html"><![CDATA[<p><strong>First</strong> I want to give huge props to the guys at <a href="https://github.com/RiotGames">RiotGames</a>. Berkshelf is shaping up to be an awesome tool in the chef toolbox.</p>
+
+<p><strong>Second</strong> I want to say that Tim Dysinger's <a href="https://github.com/dysinger/chef-box">chef-box</a> was what gave me the idea, and this is largely borrowed from the concept he started there, but with Berkshelf, Vagrant chef provisioner, and cookbooks instead of custom scripts.</p>
+
+<p>This is a tiny (git repo)[https://github.com/spheromak/chef-sandbox] that you can check out, run vagrant, and have a working chef-server and client up in no time. I am using this right now as a skeleton for testing and developing other things. It uses <a href="http://berkshelf.com">Berkshelf</a> and <a href="http://vagrantup.com">Vagrant</a> with minor special sauce for managing client/validation keys and knife configs.</p>
+
+<h1>Why?</h1>
+
+<h3>Ease</h3>
+
+<p>I needed to get a quick chef server + 1 client up for testing some cookbooks. I can't do this in test-kitchen, and test-kitchen is using librarian (all my infra is berkshelf).</p>
+
+<h3>Complex Test Scenario</h3>
+
+<p>In working to build datacenter infra over and over on a CI pipeline. I need model complex multi-node interactions in my dev and testing.</p>
+
+<h3>Education</h3>
+
+<p>I also wanted to have an easy thing that  can use for teaching other people chef without the hassle of getting a server installed and a knife client created.</p>
+
+<h3>Fun</h3>
+
+<p>I wanted to see how berkshelf was integrating with vagrant, and this seemed like a simple project.</p>
+
+<h1>Getting Started</h1>
+
+<p>Before you move forward make sure the following prerequisites are satisfied.</p>
+
+<ul>
+<li><a href="http://gembundler.com/">Bundler</a> is installed</li>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> is installed</li>
+<li>ruby 1.9  (tho may work on 1.8 I just haven't tested it)</li>
+</ul>
+
+
+<h3>Pull down the git source</h3>
+
+<pre><code> git clone https://github.com/spheromak/chef-sandbox
+</code></pre>
+
+<h3>Install the gems required</h3>
+
+<pre><code> cd chef-sandbox
+ bundle install
+</code></pre>
+
+<h3>Run Vagrant</h3>
+
+<pre><code> bundle exec vagrant up
+</code></pre>
+
+<h1>Usage</h1>
+
+<p>If you're familiar with vagrant all the vagrant stuff is the same, if you're not familiar with vagrant go do so</p>
+
+<h2>Basic Vagrant stuff</h2>
+
+<p>Note that vagrant destroy will remove the client from the chef-server as well as delete the node form the chef server.</p>
+
+<h3>Login To Client</h3>
+
+<pre><code> bundle exec vagrant ssh client1
+</code></pre>
+
+<h3>Delete client</h3>
+
+<pre><code> bundle exec vagrant destroy client1
+</code></pre>
+
+<h2>Knife stuff</h2>
+
+<p>The <strong>chef/knife.rb</strong> file sets up a relative configuration that should work inside your server vm as well as in the base directory of your host. So you can run all your knife commands, and it will talk to your server vm.</p>
+
+<p>The server install run_list runs a recipe that generates the knife credentials and stores them in <strong>/vagrant/chef</strong>. As well as copying the <strong>validation.pem</strong> there so that the subsequent clients can register with the server. When you remove a client via vagrant destroy the client and node will be removed from the server.</p>
+
+<h2>Spinning more clients</h2>
+
+<p>You can mod the Vagrant file to spin as many clients as you wish. I will probably add in some stuff down the road to make this easier.</p>
+
+<h1>TODO</h1>
+
+<p>I may work out some simple externalization of run_lists and box type/url. This would provide a simple primitive for building up your own test framework around vagrant.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Knife-XAPI: Chef and Xenserver]]></title>
+    <link href="http://spheromak.github.com/blog/2012/04/02/knife-xapi-chef-and-xenserver/"/>
+    <updated>2012-04-02T14:14:00-07:00</updated>
+    <id>http://spheromak.github.com/blog/2012/04/02/knife-xapi-chef-and-xenserver</id>
+    <content type="html"><![CDATA[<h2>Knife-XAPI</h2>
+
+<p>Just finished making a knife plugin (my first)  and gem (also my first) that enables knife xapi support. Right now it is only supporting guest create, but I plan on adding more commands in the near future.</p>
+
+<p>you can install it with gem
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install knife-xapi</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now you can spin up a guest on a Xen API host with knife. This is basic usage
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>knife xapi guest create "NewBox" "public"  \
+</span><span class='line'>  --xapi-vm-template "MyBaseBox" \
+</span><span class='line'>  --host http://sandbox/</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The "NewBox" is the hosts name-label, and "public" would be the network name label you want to attach eth0 too. You can specify more networks as well:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>knife xapi guest create "router" "public" "dmz" "private"  \
+</span><span class='line'>  --xapi-vm-template "MyBaseBox"  \
+</span><span class='line'>  --host http://sandbox/</span></code></pre></td></tr></table></div></figure></notextile></div>
+This would build out a box basedon MyBaseBox template, and add 3 interfaces eth0/1/2 that are connected to those networks in the order specified.</p>
+
+<p>The way I am using this now is to boot centos boxes and kickstart them at will. Using this more elaborate comandline:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>knife xapi guest create "MySpiffyBox" "pub_network" \
+</span><span class='line'> -B "dns=8.8.8.8 ks=http://192.168.6.4/repo/ks/default.ks ip=192.168.6.7 netmask=255.255.255.0 gateway=192.168.6.1" \
+</span><span class='line'> -R http://192.168.6.5/repo/centos/5/os/x86_64 \
+</span><span class='line'> -C 4 -M 4g -D 5g \
+</span><span class='line'> -T "CentOS 5 (64-bit)" --host http://sandbox/</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Here I am using the default xenserver 5 template to install a cent5 based vm with -T.  Setting the VM Boot Arguments with -B that are instructing anaconda where to get the kickstart and how to setup the netinstalls networking.
+The -C switch is setting up 4 cpu's on the guest. The -M is allocating 4 gigs of mem and -D is creating the root disk (xvda)  as a 5GB box. This particular kickstart
+is a minimal centos install.  This kicks off my kickstart install and in ~3 minutes i have a fresh machine installed via knife.</p>
+
+<h2>TODO</h2>
+
+<p>This is the stuff i want to add into this plugin:</p>
+
+<ul>
+<li>Fix SSL issues</li>
+<li>Guest Destroy</li>
+<li>Guest List</li>
+<li>Network List</li>
+<li>Network Create</li>
+<li>Network Destroy</li>
+<li>SR Management</li>
+</ul>
+
+
+<p>I may or may not include this in the knife command:</p>
+
+<ul>
+<li>VM Metrics</li>
+<li>Host Metrics</li>
+<li>VIF/VBD Metrics</li>
+</ul>
+
+
+<h2>Bugs</h2>
+
+<p>Right now the big one is that the XML::RPC client gem is not supporting a way for me to ignore SSL Self signed certs that xenservers ship with. So https:// will only work on properly signed api endpoints.</p>
+
+<h2>Source</h2>
+
+<p>You can grab poke/comment and help me make this better!
+Codes up on <a href="https://github.com/spheromak/knife-xapi">github</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[sysctl LWRP for chef]]></title>
+    <link href="http://spheromak.github.com/blog/2012/02/28/sysctl-lwrp-for-chef/"/>
+    <updated>2012-02-28T18:25:00-08:00</updated>
+    <id>http://spheromak.github.com/blog/2012/02/28/sysctl-lwrp-for-chef</id>
+    <content type="html"><![CDATA[<p>About 2 years ago i wrote a hacky ohai plugin to push all sysctl values into node data, and then a crappy recipe that would run an exec if they didn't match values in node-data. A few months back i re-wrote all this to just use an lwrp that would just set these value, and a recipe that would pull them from attributes. So if you want to be able to see what nodes have huge pages enabled or whatnot.</p>
+
+<p>Today I took some time to clean up the readme and release that code for others to hopefully find useful.</p>
+
+<ul>
+<li>On github <a href="https://github.com/spheromak/cookbooks/tree/master/sysctl">sysctl lwrp cookbook</a></li>
+<li>On the community site <a href="http://community.opscode.com/cookbooks/jn_sysctl">jn_sysctl</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

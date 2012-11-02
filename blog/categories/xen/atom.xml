@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: xen | f00bar.com]]></title>
+  <link href="http://spheromak.github.com/blog/categories/xen/atom.xml" rel="self"/>
+  <link href="http://spheromak.github.com/"/>
+  <updated>2012-11-01T23:06:59-07:00</updated>
+  <id>http://spheromak.github.com/</id>
+  <author>
+    <name><![CDATA[Jesse Nelson]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Knife-XAPI: Chef and Xenserver]]></title>
+    <link href="http://spheromak.github.com/blog/2012/04/02/knife-xapi-chef-and-xenserver/"/>
+    <updated>2012-04-02T14:14:00-07:00</updated>
+    <id>http://spheromak.github.com/blog/2012/04/02/knife-xapi-chef-and-xenserver</id>
+    <content type="html"><![CDATA[<h2>Knife-XAPI</h2>
+
+<p>Just finished making a knife plugin (my first)  and gem (also my first) that enables knife xapi support. Right now it is only supporting guest create, but I plan on adding more commands in the near future.</p>
+
+<p>you can install it with gem
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install knife-xapi</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now you can spin up a guest on a Xen API host with knife. This is basic usage
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>knife xapi guest create "NewBox" "public"  \
+</span><span class='line'>  --xapi-vm-template "MyBaseBox" \
+</span><span class='line'>  --host http://sandbox/</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The "NewBox" is the hosts name-label, and "public" would be the network name label you want to attach eth0 too. You can specify more networks as well:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>knife xapi guest create "router" "public" "dmz" "private"  \
+</span><span class='line'>  --xapi-vm-template "MyBaseBox"  \
+</span><span class='line'>  --host http://sandbox/</span></code></pre></td></tr></table></div></figure></notextile></div>
+This would build out a box basedon MyBaseBox template, and add 3 interfaces eth0/1/2 that are connected to those networks in the order specified.</p>
+
+<p>The way I am using this now is to boot centos boxes and kickstart them at will. Using this more elaborate comandline:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>knife xapi guest create "MySpiffyBox" "pub_network" \
+</span><span class='line'> -B "dns=8.8.8.8 ks=http://192.168.6.4/repo/ks/default.ks ip=192.168.6.7 netmask=255.255.255.0 gateway=192.168.6.1" \
+</span><span class='line'> -R http://192.168.6.5/repo/centos/5/os/x86_64 \
+</span><span class='line'> -C 4 -M 4g -D 5g \
+</span><span class='line'> -T "CentOS 5 (64-bit)" --host http://sandbox/</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Here I am using the default xenserver 5 template to install a cent5 based vm with -T.  Setting the VM Boot Arguments with -B that are instructing anaconda where to get the kickstart and how to setup the netinstalls networking.
+The -C switch is setting up 4 cpu's on the guest. The -M is allocating 4 gigs of mem and -D is creating the root disk (xvda)  as a 5GB box. This particular kickstart
+is a minimal centos install.  This kicks off my kickstart install and in ~3 minutes i have a fresh machine installed via knife.</p>
+
+<h2>TODO</h2>
+
+<p>This is the stuff i want to add into this plugin:</p>
+
+<ul>
+<li>Fix SSL issues</li>
+<li>Guest Destroy</li>
+<li>Guest List</li>
+<li>Network List</li>
+<li>Network Create</li>
+<li>Network Destroy</li>
+<li>SR Management</li>
+</ul>
+
+
+<p>I may or may not include this in the knife command:</p>
+
+<ul>
+<li>VM Metrics</li>
+<li>Host Metrics</li>
+<li>VIF/VBD Metrics</li>
+</ul>
+
+
+<h2>Bugs</h2>
+
+<p>Right now the big one is that the XML::RPC client gem is not supporting a way for me to ignore SSL Self signed certs that xenservers ship with. So https:// will only work on properly signed api endpoints.</p>
+
+<h2>Source</h2>
+
+<p>You can grab poke/comment and help me make this better!
+Codes up on <a href="https://github.com/spheromak/knife-xapi">github</a></p>
+]]></content>
+  </entry>
+  
+</feed>

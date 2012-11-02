@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: lwrp | f00bar.com]]></title>
+  <link href="http://spheromak.github.com/blog/categories/lwrp/atom.xml" rel="self"/>
+  <link href="http://spheromak.github.com/"/>
+  <updated>2012-11-01T23:06:59-07:00</updated>
+  <id>http://spheromak.github.com/</id>
+  <author>
+    <name><![CDATA[Jesse Nelson]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[sysctl LWRP for chef]]></title>
+    <link href="http://spheromak.github.com/blog/2012/02/28/sysctl-lwrp-for-chef/"/>
+    <updated>2012-02-28T18:25:00-08:00</updated>
+    <id>http://spheromak.github.com/blog/2012/02/28/sysctl-lwrp-for-chef</id>
+    <content type="html"><![CDATA[<p>About 2 years ago i wrote a hacky ohai plugin to push all sysctl values into node data, and then a crappy recipe that would run an exec if they didn't match values in node-data. A few months back i re-wrote all this to just use an lwrp that would just set these value, and a recipe that would pull them from attributes. So if you want to be able to see what nodes have huge pages enabled or whatnot.</p>
+
+<p>Today I took some time to clean up the readme and release that code for others to hopefully find useful.</p>
+
+<ul>
+<li>On github <a href="https://github.com/spheromak/cookbooks/tree/master/sysctl">sysctl lwrp cookbook</a></li>
+<li>On the community site <a href="http://community.opscode.com/cookbooks/jn_sysctl">jn_sysctl</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

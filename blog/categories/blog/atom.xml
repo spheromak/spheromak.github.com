@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: blog | f00bar.com]]></title>
+  <link href="http://spheromak.github.com/blog/categories/blog/atom.xml" rel="self"/>
+  <link href="http://spheromak.github.com/"/>
+  <updated>2012-11-01T23:06:59-07:00</updated>
+  <id>http://spheromak.github.com/</id>
+  <author>
+    <name><![CDATA[Jesse Nelson]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopressed]]></title>
+    <link href="http://spheromak.github.com/blog/2011/12/10/octopressed/"/>
+    <updated>2011-12-10T17:43:00-08:00</updated>
+    <id>http://spheromak.github.com/blog/2011/12/10/octopressed</id>
+    <content type="html"><![CDATA[<p> Posterous just doesn't support markdown very well, and every time I felt like writing a blog entry I would get frustrated. So after a couple people have expressed their pleasure with tools like <a href="http://jekyllrb.com/">jekyll</a> using github pages.  I decided to give it a go.</p>
+
+<p>I love this setup. I tried jumping in with <a href="http://octopress.org/">octopress</a> without the rtfm. Having never setup github pages before i mucked up by creating a project site vs a user site, but once I fixed that (by creating a spheromak.github.com repo) everything clicked in.</p>
+
+<p>Pulling old posterous posts down into <a href="http://jekyllrb.com/">jekyll</a> was simple, and now im off and running with real markdown blog. Backed by git, and I am happier for it.</p>
+
+<p>So thanks <a href="http://github.com">github</a>, <a href="http://jekyllrb.com/">jekyll</a>,  and <a href="http://octopress.org/">octopress</a>  for cool software that works</p>
+]]></content>
+  </entry>
+  
+</feed>

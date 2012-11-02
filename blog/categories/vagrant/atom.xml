@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: vagrant | f00bar.com]]></title>
+  <link href="http://spheromak.github.com/blog/categories/vagrant/atom.xml" rel="self"/>
+  <link href="http://spheromak.github.com/"/>
+  <updated>2012-11-01T23:06:59-07:00</updated>
+  <id>http://spheromak.github.com/</id>
+  <author>
+    <name><![CDATA[Jesse Nelson]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[chef-sandbox: chef-server playground]]></title>
+    <link href="http://spheromak.github.com/blog/2012/11/01/chef-sandbox-chef-server-auto-playground/"/>
+    <updated>2012-11-01T21:20:00-07:00</updated>
+    <id>http://spheromak.github.com/blog/2012/11/01/chef-sandbox-chef-server-auto-playground</id>
+    <content type="html"><![CDATA[<p><strong>First</strong> I want to give huge props to the guys at <a href="https://github.com/RiotGames">RiotGames</a>. Berkshelf is shaping up to be an awesome tool in the chef toolbox.</p>
+
+<p><strong>Second</strong> I want to say that Tim Dysinger's <a href="https://github.com/dysinger/chef-box">chef-box</a> was what gave me the idea, and this is largely borrowed from the concept he started there, but with Berkshelf, Vagrant chef provisioner, and cookbooks instead of custom scripts.</p>
+
+<p>This is a tiny (git repo)[https://github.com/spheromak/chef-sandbox] that you can check out, run vagrant, and have a working chef-server and client up in no time. I am using this right now as a skeleton for testing and developing other things. It uses <a href="http://berkshelf.com">Berkshelf</a> and <a href="http://vagrantup.com">Vagrant</a> with minor special sauce for managing client/validation keys and knife configs.</p>
+
+<h1>Why?</h1>
+
+<h3>Ease</h3>
+
+<p>I needed to get a quick chef server + 1 client up for testing some cookbooks. I can't do this in test-kitchen, and test-kitchen is using librarian (all my infra is berkshelf).</p>
+
+<h3>Complex Test Scenario</h3>
+
+<p>In working to build datacenter infra over and over on a CI pipeline. I need model complex multi-node interactions in my dev and testing.</p>
+
+<h3>Education</h3>
+
+<p>I also wanted to have an easy thing that  can use for teaching other people chef without the hassle of getting a server installed and a knife client created.</p>
+
+<h3>Fun</h3>
+
+<p>I wanted to see how berkshelf was integrating with vagrant, and this seemed like a simple project.</p>
+
+<h1>Getting Started</h1>
+
+<p>Before you move forward make sure the following prerequisites are satisfied.</p>
+
+<ul>
+<li><a href="http://gembundler.com/">Bundler</a> is installed</li>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> is installed</li>
+<li>ruby 1.9  (tho may work on 1.8 I just haven't tested it)</li>
+</ul>
+
+
+<h3>Pull down the git source</h3>
+
+<pre><code> git clone https://github.com/spheromak/chef-sandbox
+</code></pre>
+
+<h3>Install the gems required</h3>
+
+<pre><code> cd chef-sandbox
+ bundle install
+</code></pre>
+
+<h3>Run Vagrant</h3>
+
+<pre><code> bundle exec vagrant up
+</code></pre>
+
+<h1>Usage</h1>
+
+<p>If you're familiar with vagrant all the vagrant stuff is the same, if you're not familiar with vagrant go do so</p>
+
+<h2>Basic Vagrant stuff</h2>
+
+<p>Note that vagrant destroy will remove the client from the chef-server as well as delete the node form the chef server.</p>
+
+<h3>Login To Client</h3>
+
+<pre><code> bundle exec vagrant ssh client1
+</code></pre>
+
+<h3>Delete client</h3>
+
+<pre><code> bundle exec vagrant destroy client1
+</code></pre>
+
+<h2>Knife stuff</h2>
+
+<p>The <strong>chef/knife.rb</strong> file sets up a relative configuration that should work inside your server vm as well as in the base directory of your host. So you can run all your knife commands, and it will talk to your server vm.</p>
+
+<p>The server install run_list runs a recipe that generates the knife credentials and stores them in <strong>/vagrant/chef</strong>. As well as copying the <strong>validation.pem</strong> there so that the subsequent clients can register with the server. When you remove a client via vagrant destroy the client and node will be removed from the server.</p>
+
+<h2>Spinning more clients</h2>
+
+<p>You can mod the Vagrant file to spin as many clients as you wish. I will probably add in some stuff down the road to make this easier.</p>
+
+<h1>TODO</h1>
+
+<p>I may work out some simple externalization of run_lists and box type/url. This would provide a simple primitive for building up your own test framework around vagrant.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Arch | f00bar.com]]></title>
+  <link href="http://spheromak.github.com/blog/categories/arch/atom.xml" rel="self"/>
+  <link href="http://spheromak.github.com/"/>
+  <updated>2012-11-01T23:06:59-07:00</updated>
+  <id>http://spheromak.github.com/</id>
+  <author>
+    <name><![CDATA[Jesse Nelson]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Arch Linux Developer Vagrant Box]]></title>
+    <link href="http://spheromak.github.com/blog/2011/09/21/arch-linux-developer-vagrant-box/"/>
+    <updated>2011-09-21T00:00:00-07:00</updated>
+    <id>http://spheromak.github.com/blog/2011/09/21/arch-linux-developer-vagrant-box</id>
+    <content type="html"><![CDATA[<p><a href="http://vagrantup.com/" title="Vagrant">Vagrant</a> is sweet!, but there wasn't a lot of <a href="http://archlinux.org/" title="Arch Linux">arch</a> boxes out there that i could find. So heres my <a href="http://pipe.f00bar.com/Vagrantfile" title="arch_dev Vagrant File">Vagrantfile</a>.</p>
+
+<p>if you don't already use <a href="http://vagrantup.com/" title="Vagrant">Vagrant</a> you should. If you are doing any dev you should use it! if your an ops person then you should use it, and tell your developers about it. If you are a nerd you should use <a href="http://vagrantup.com/" title="Vagrant">Vagrant</a>. Nuf said.</p>
+
+<p><a href="http://archlinux.org/" title="Arch Linux">Arch</a> is also pretty sweet. <a href="http://archlinux.org/" title="Arch Linux">Arch Linux</a> has a system approach that rings totally right with me (I feel another post about arch in here someplace). Mainly Arch lets you do what you want how you want which is awesome!</p>
+
+<p>Anyhow I have a little pet project that originally I was gonna do an LFS build up on, but realized arch already had a lot of what I needed. <a href="http://www.freedesktop.org/wiki/Software/systemd" title="ohai systemd">systemd</a> support, and an not ancient/screwed up ruby install.</p>
+
+<ul>
+<li><a href="http://pipe.f00bar.com/Vagrantfile" title="arch_dev Vagrant File">My build</a> deviates from base arch in these ways:
+
+<ul>
+<li>It's running 3.0.4 Kernel</li>
+<li>Using <a href="http://www.freedesktop.org/wiki/Software/systemd" title="ohai systemd">systemd</a> (with option to boot sysv)</li>
+<li>full developer toolchain.</li>
+<li><a href="" title="https://wiki.archlinux.org/index.php/Arch_Build_System">ABS</a> the source build system for Arch.</li>
+<li>Its big! ~1.2GB for a base box is pretty big, but its cause of all the build crap + kernel source</li>
+</ul>
+</li>
+</ul>
+
+
+<p>Lastly heres the links to the <a href="http://pipe.f00bar.com/arch_dev-x86_64.box" title="arch_dev Base Box">base box</a> if you don't want to get it via the vagrantfile.</p>
+]]></content>
+  </entry>
+  
+</feed>
