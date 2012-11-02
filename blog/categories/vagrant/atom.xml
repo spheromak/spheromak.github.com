@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vagrant | f00bar.com]]></title>
   <link href="http://spheromak.github.com/blog/categories/vagrant/atom.xml" rel="self"/>
   <link href="http://spheromak.github.com/"/>
-  <updated>2012-11-01T23:06:59-07:00</updated>
+  <updated>2012-11-01T23:14:06-07:00</updated>
   <id>http://spheromak.github.com/</id>
   <author>
     <name><![CDATA[Jesse Nelson]]></name>
@@ -18,7 +18,9 @@
     <link href="http://spheromak.github.com/blog/2012/11/01/chef-sandbox-chef-server-auto-playground/"/>
     <updated>2012-11-01T21:20:00-07:00</updated>
     <id>http://spheromak.github.com/blog/2012/11/01/chef-sandbox-chef-server-auto-playground</id>
-    <content type="html"><![CDATA[<p><strong>First</strong> I want to give huge props to the guys at <a href="https://github.com/RiotGames">RiotGames</a>. Berkshelf is shaping up to be an awesome tool in the chef toolbox.</p>
+    <content type="html"><![CDATA[<p>TL;WR: <a href="https://github.com/spheromak/chef-sandbox">go here</a></p>
+
+<p><strong>First</strong> I want to give huge props to the guys at <a href="https://github.com/RiotGames">RiotGames</a>. Berkshelf is shaping up to be an awesome tool in the chef toolbox.</p>
 
 <p><strong>Second</strong> I want to say that Tim Dysinger's <a href="https://github.com/dysinger/chef-box">chef-box</a> was what gave me the idea, and this is largely borrowed from the concept he started there, but with Berkshelf, Vagrant chef provisioner, and cookbooks instead of custom scripts.</p>
 
