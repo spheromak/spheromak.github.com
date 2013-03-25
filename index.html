@@ -153,7 +153,7 @@ Instead Why can&#8217;t we plug these things into the OS&#8217;s file event noti
 
 <h3>Supervising the Supervisors</h3>
 
-<p>So yea, Chef and puppet etc.. like to watch services for state. Most distros today implement service supervision in one way or the other (upstart/systemd/systemd). Yet our frameworks aren&#8217;t plugging into this system for service management in a direct way. Instead they are executing shell scripts to interrogate state. Never mind the fact that they are polling said state when some of those supervisors support subscriptions for notifications.</p>
+<p>So yea, Chef and puppet etc.. like to watch services for state. Most distros today implement service supervision in one way or the other (upstart/systemd/launchd). Yet our frameworks aren&#8217;t plugging into this system for service management in a direct way. Instead they are executing shell scripts to interrogate state. Never mind the fact that they are polling said state when some of those supervisors support subscriptions for notifications.</p>
 
 <p>Init scripts are imperative. Supervisors and CM want to be declarative systems. I think some issues arise because of the conflict in these approaches.</p>
 

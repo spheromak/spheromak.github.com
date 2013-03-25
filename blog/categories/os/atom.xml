@@ -4,7 +4,7 @@
   <title><![CDATA[Category: OS | f00bar.com]]></title>
   <link href="http://spheromak.github.com/blog/categories/os/atom.xml" rel="self"/>
   <link href="http://spheromak.github.com/"/>
-  <updated>2013-03-25T15:49:10-07:00</updated>
+  <updated>2013-03-25T15:51:29-07:00</updated>
   <id>http://spheromak.github.com/</id>
   <author>
     <name><![CDATA[Jesse Nelson]]></name>
@@ -64,7 +64,7 @@ Instead Why can't we plug these things into the OS's file event notifications.  
 
 <h3>Supervising the Supervisors</h3>
 
-<p>So yea, Chef and puppet etc.. like to watch services for state. Most distros today implement service supervision in one way or the other (upstart/systemd/systemd). Yet our frameworks aren't plugging into this system for service management in a direct way. Instead they are executing shell scripts to interrogate state. Never mind the fact that they are polling said state when some of those supervisors support subscriptions for notifications.</p>
+<p>So yea, Chef and puppet etc.. like to watch services for state. Most distros today implement service supervision in one way or the other (upstart/systemd/launchd). Yet our frameworks aren't plugging into this system for service management in a direct way. Instead they are executing shell scripts to interrogate state. Never mind the fact that they are polling said state when some of those supervisors support subscriptions for notifications.</p>
 
 <p>Init scripts are imperative. Supervisors and CM want to be declarative systems. I think some issues arise because of the conflict in these approaches.</p>
 
