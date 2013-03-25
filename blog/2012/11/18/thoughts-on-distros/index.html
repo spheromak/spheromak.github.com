@@ -1,0 +1,507 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Thoughts on the State of the Distro and Config Management - f00bar.com</title>
+  <meta name="author" content="Jesse Nelson">
+
+  
+  <meta name="description" content="With the proliferation of Virtualization/Cloud infrastructure our traditional Ideas and practices when it comes to &#8220;The System&#8221; are not &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://spheromak.github.com/blog/2012/11/18/thoughts-on-distros/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="f00bar.com" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6010336-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">f00bar.com</a></h1>
+  
+    <h2>dev += ops</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:spheromak.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Thoughts on the State of the Distro and Config Management</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-18T03:42:00-08:00" pubdate data-updated="true">Nov 18<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>With the proliferation of Virtualization/Cloud infrastructure our traditional Ideas and practices when it comes to &#8220;The System&#8221; are not keeping pace. With every IOP, Cycle, and byte we consume in our workloads we pay.
+It used to be that a system was idle in one of its dimensions a fair amount of time. This idle nature allowed us to build &#8220;Fat&#8221; management tools to ensure things worked.</p>
+
+<p>What follows is a rant that has been percolating in me for a couple years now. I have attempted to try to organize the rant in such a way to be comprehensible. Mind you this post started in November of 2012, and I have been slowly adding to it.</p>
+
+<h2>Where I rant about things</h2>
+
+<h3>Waste</h3>
+
+<p>All the management tools seem to be wasting heaps of resource. Especially the most popular (and my favorite) chef/puppet. Things like Ansible and Cfengine3 have a much more desirable overhead for config management. Other monitoring tools in common use are crazy overhead.  Most nagios plugins are not resource minded. Things like collectd are.</p>
+
+<p>In the same vein Most of what is a &#8220;distro&#8221; is waste in the modern datacenter.</p>
+
+<h4>I/O</h4>
+
+<p>Most of the tools are doing some file caching and state caching but still tend to tear the shit outta file i/o when ran. On some boxes with chef (puppet before that) with heaps of files to stat the runs go nuts with tiny I/O. On stuff like ec2 this is money.
+Instead Why can&#8217;t we plug these things into the OS&#8217;s file event notifications.  <a href="https://github.com/spheromak/chef-inotify">see my hacked chef-inotify stuff</a> for a non functional experiment.</p>
+
+<h4>Disk</h4>
+
+<p>Most distros put heaps of shit on disk that we don&#8217;t need in the modern data center. Most documentation on every VM you build is pretty useless. Man pages are great, I love them and use them almost every day, but i don&#8217;t need them on every one of a thousand vm&#8217;s eating up 100&#8217;s of MB (oh woop a couple gigs).. Yea but thats a couple gigs we pay for!</p>
+
+<p>Generally it doesn&#8217;t stop with docs. The mentality today is disk is cheap. In many ways it is, but there are other costs to disk. Especially when it comes to the IaaS images. Time to provision is something most people care about.</p>
+
+<h4>CPU</h4>
+
+<p>All the monitoring and management things tend to have a heap of crazy overhead. Mainly cause individually its not an issue, but collectively they add up to be a nuisance.</p>
+
+<p>I dunno how to solve this really. It&#8217;s a necessary design trade off between being able to automate/monitor easily with whatever tools you may partially know, and thrash your system :D</p>
+
+<h4>Memory</h4>
+
+<p>Again in our IaaS infra. As a consumer and a provider these resources matter. As a provider that capacity I can&#8217;t sell. As a consumer thats money out of my pocket. Yet it is treated as tho its no thing.</p>
+
+<ul>
+<li>Chef/Puppet trade off heaps of memory for ease of use</li>
+<li>90% of the time the daemon isn&#8217;t doing anything except chewing on memory</li>
+</ul>
+
+
+<p>Granted I run chef on a cron schedule so it only eats what it needs for a run, and the fork mode solves some of the leaking issues it used to have. Fundamentally tho these issues are side-effect of using ruby or any other high level lang that wants to treat memory like shit.</p>
+
+<p>I got no constructive Ideas here other than write your shit in a systems language when its meant to be a systems service. (not really constructive more curmudgeon, but yea)</p>
+
+<h3>Supervising the Supervisors</h3>
+
+<p>So yea, Chef and puppet etc.. like to watch services for state. Most distros today implement service supervision in one way or the other (upstart/systemd/systemd). Yet our frameworks aren&#8217;t plugging into this system for service management in a direct way. Instead they are executing shell scripts to interrogate state. Never mind the fact that they are polling said state when some of those supervisors support subscriptions for notifications.</p>
+
+<p>Init scripts are imperative. Supervisors and CM want to be declarative systems. I think some issues arise because of the conflict in these approaches.</p>
+
+<ul>
+<li>Our service infra should not poll.</li>
+<li>Our Config Management should subscribe to services.</li>
+<li>Init scripts should die</li>
+</ul>
+
+
+<p>Maybe the 2 systems really could be merged in some way they are both doing so much of the same things.</p>
+
+<h3>Notifications > Poll</h3>
+
+<p>srsly</p>
+
+<h3>Package Managers are not Config management</h3>
+
+<p>This one was hot on the chef list recently. A package manger is something we did before we had awesome ways to manage all our configuration state. They are also a way to deliver a binary with its configuration setup in a way that should mean the binary will run. Unfortunately they have their own opinions on this, and frequently that clashes with the goal of the Config management framework.</p>
+
+<ul>
+<li>Packages are not CM</li>
+<li>CM can be a packager tho.</li>
+</ul>
+
+
+<h3>The network is the computer</h3>
+
+<p>Sun was right. Look at where we are today with Infra and Platform services. I want my systems to be aware of one another in a deep way. Not by some overarching orchestration framework. I don&#8217;t need a distro for my laptop I need one for my datacenter that isn&#8217;t a pile of shit.</p>
+
+<p>I want my distro to only have what it needs to do the thing its doing, and nothing more. When those needs change it should be able to get to that state without issue. Possibly talking to it&#8217;s neighbors.</p>
+
+<ul>
+<li>Would be nice to see promise theory baked in</li>
+<li>Torrent as a basic service</li>
+</ul>
+
+
+<h3>Dep Hell</h3>
+
+<p>Everyone who has used any packager or any programing language knows this. Cfg Management can help in some ways by building abstractions over the dependencies, and obfuscating the pain to a point. Even the management tools in this scenario fall victim to dephell. A good example from chef land. I need to pull an apt cookbook to manage a yum based system.. Now I understand why, and the root cause within chef and the metadata that leads to this. I also understand that this is not really an issue when it comes to how the recipes are evaluated, but it still makes me upset/uneasy.</p>
+
+<p>Source based distros get around this in a heavy handed way, but it is my experience that they tend to have less issues than binary distros. Tho this is anecdotal. As is this entire rant I am calling a blog post.</p>
+
+<ul>
+<li>there has to be a better way</li>
+</ul>
+
+
+<h3>Too Much central Bullshit</h3>
+
+<p>Everyone likes to build central management of things. Central monitoring. Central aggregation of logs.  This just doesn&#8217;t play in the scale game very well. It lends to management and scaling pains.</p>
+
+<ul>
+<li>there has to be a better way</li>
+</ul>
+
+
+<h3>Everything is shoe-string</h3>
+
+<p>Scripts on Scripts on Scripts all glued together with python/ruby does not a system make.  :\</p>
+
+<ul>
+<li>there has to be a better way</li>
+</ul>
+
+
+<h2>My Ideas</h2>
+
+<p>Aside from the ideas in the rant, I have these other rough ideas rolling around in my noggin, and I feel its good to get them out. Again mostly ranting, and notes to self.</p>
+
+<h3>Hackers are Smart</h3>
+
+<p>Maybe they can teach us stuff
+When you look at many of the botnets out there. They have some really admirable qualities. I mean heres complex networks of machines working together with pretty minimal C&amp;C, and across very hostile and turbulent environments. Why aren&#8217;t we using more of this shit in Datacenters for good, not evil!
+Look at these qualities:
+* Distributed Without control nodes
+* C&amp;C is propagated
+* Neighbor discovery Confidence <em>possible &#8220;infection&#8221; to other machines</em>
+* Fallback to Non Distrib C&amp;C in fail modes (using twitter/irc etc to send C&amp;C to your infra. err Botnet)</p>
+
+<h3>One Config FrameWork to Rule them All</h3>
+
+<ul>
+<li>Systems languages are not hip, but they exist for a reason.</li>
+<li>LFS/DSL based distro</li>
+<li>Merge CM and Init</li>
+<li>Leverage services Notification system
+** s6 or  Systemd  (both have service bus arch)</li>
+<li>Notifications on state change</li>
+<li>Registration of new services</li>
+<li>Init -> Calls CM for service actions</li>
+<li>Canonical file changes should notify the CM.</li>
+<li>CM doesn&#8217;t even stat files unless FS event has been triggered</li>
+</ul>
+
+
+<p>This makes our basic OS so much smarter than stupid init scrips</p>
+
+<h3>Merge the Packager and The CM ?</h3>
+
+<p>Everyone is CI Pimpin&#8217; why cant we just build the whole fucking OS. (especially if its tiny) and described in CM.</p>
+
+<p>Chef already has the basic resources (ark) to be a packager, and produce binaries that could be disted out. Whole thing could sit on github.</p>
+
+<p>In this scenario I imagine chef (or something like it) describing exactly what a system should be. I.e. packages and package deps. The entire enchilada, but this enchilada is pretty small to be fair. The entire distro is then assembled from a stage2 bootstrap up to &#8220;base&#8221;. This process is built publicly on Travis or something akin to this. No releases. Just the CI distro.</p>
+
+<h3>Brew Rocks</h3>
+
+<p>Can&#8217;t we just do that for everything.  Or kinda. I mean just make it super simple and easy to write recipes. Something like a brew + chef or some wacky way to define a packages build flags and deps, but integrated in the config management that sits at the center of this new Un-Distro.</p>
+
+<h4>Why?</h4>
+
+<ul>
+<li>Isolation of Versions (kegs)</li>
+<li>Multiple lib versions</li>
+<li>Just Fuckin Works (most the time)</li>
+</ul>
+
+
+<h4>Weaknesses</h4>
+
+<ul>
+<li>Rollback</li>
+<li>No Partial upgrades (but srsly just redeploy)</li>
+</ul>
+
+
+<h3>Ok Ok binaries have a place.</h3>
+
+<p>lets manage those independent of configs then</p>
+
+<p>CI + Metarepo? + CM</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jesse Nelson</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-18T03:42:00-08:00" pubdate data-updated="true">Nov 18<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/chef/'>Chef</a>, <a class='category' href='/blog/categories/os/'>OS</a>, <a class='category' href='/blog/categories/sysadmin/'>Sysadmin</a>, <a class='category' href='/blog/categories/unix/'>Unix</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://spheromak.github.com/blog/2012/11/18/thoughts-on-distros/" data-via="spheromak" data-counturl="http://spheromak.github.com/blog/2012/11/18/thoughts-on-distros/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/11/01/chef-sandbox-chef-server-auto-playground/" title="Previous Post: chef-sandbox: chef-server playground">&laquo; chef-sandbox: chef-server playground</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/18/thoughts-on-distros/">Thoughts on the State of the Distro and Config Management</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/01/chef-sandbox-chef-server-auto-playground/">chef-sandbox: chef-server playground</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/02/knife-xapi-chef-and-xenserver/">Knife-XAPI: Chef and Xenserver</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/02/28/sysctl-lwrp-for-chef/">sysctl LWRP for chef</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/12/10/octopressed/">Octopressed</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/spheromak">@spheromak</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'spheromak',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("spheromak", 4, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/spheromak" class="twitter-follow-button" data-show-count="false">Follow @spheromak</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/spheromak@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jesse Nelson -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'f00bar';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://spheromak.github.com/blog/2012/11/18/thoughts-on-distros/';
+        var disqus_url = 'http://spheromak.github.com/blog/2012/11/18/thoughts-on-distros/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

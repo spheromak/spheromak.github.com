@@ -9,7 +9,7 @@
   <meta name="author" content="Jesse Nelson">
 
   
-  <meta name="description" content="TL;WR: go here First I want to give huge props to the guys at RiotGames. Berkshelf is shaping up to be an awesome tool in the chef toolbox. Second I &hellip;">
+  <meta name="description" content="With the proliferation of Virtualization/Cloud infrastructure our traditional Ideas and practices when it comes to &#8220;The System&#8221; are not &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,223 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/11/18/thoughts-on-distros/">Thoughts on the State of the Distro and Config Management</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-18T03:42:00-08:00" pubdate data-updated="true">Nov 18<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/18/thoughts-on-distros/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>With the proliferation of Virtualization/Cloud infrastructure our traditional Ideas and practices when it comes to &#8220;The System&#8221; are not keeping pace. With every IOP, Cycle, and byte we consume in our workloads we pay.
+It used to be that a system was idle in one of its dimensions a fair amount of time. This idle nature allowed us to build &#8220;Fat&#8221; management tools to ensure things worked.</p>
+
+<p>What follows is a rant that has been percolating in me for a couple years now. I have attempted to try to organize the rant in such a way to be comprehensible. Mind you this post started in November of 2012, and I have been slowly adding to it.</p>
+
+<h2>Where I rant about things</h2>
+
+<h3>Waste</h3>
+
+<p>All the management tools seem to be wasting heaps of resource. Especially the most popular (and my favorite) chef/puppet. Things like Ansible and Cfengine3 have a much more desirable overhead for config management. Other monitoring tools in common use are crazy overhead.  Most nagios plugins are not resource minded. Things like collectd are.</p>
+
+<p>In the same vein Most of what is a &#8220;distro&#8221; is waste in the modern datacenter.</p>
+
+<h4>I/O</h4>
+
+<p>Most of the tools are doing some file caching and state caching but still tend to tear the shit outta file i/o when ran. On some boxes with chef (puppet before that) with heaps of files to stat the runs go nuts with tiny I/O. On stuff like ec2 this is money.
+Instead Why can&#8217;t we plug these things into the OS&#8217;s file event notifications.  <a href="https://github.com/spheromak/chef-inotify">see my hacked chef-inotify stuff</a> for a non functional experiment.</p>
+
+<h4>Disk</h4>
+
+<p>Most distros put heaps of shit on disk that we don&#8217;t need in the modern data center. Most documentation on every VM you build is pretty useless. Man pages are great, I love them and use them almost every day, but i don&#8217;t need them on every one of a thousand vm&#8217;s eating up 100&#8217;s of MB (oh woop a couple gigs).. Yea but thats a couple gigs we pay for!</p>
+
+<p>Generally it doesn&#8217;t stop with docs. The mentality today is disk is cheap. In many ways it is, but there are other costs to disk. Especially when it comes to the IaaS images. Time to provision is something most people care about.</p>
+
+<h4>CPU</h4>
+
+<p>All the monitoring and management things tend to have a heap of crazy overhead. Mainly cause individually its not an issue, but collectively they add up to be a nuisance.</p>
+
+<p>I dunno how to solve this really. It&#8217;s a necessary design trade off between being able to automate/monitor easily with whatever tools you may partially know, and thrash your system :D</p>
+
+<h4>Memory</h4>
+
+<p>Again in our IaaS infra. As a consumer and a provider these resources matter. As a provider that capacity I can&#8217;t sell. As a consumer thats money out of my pocket. Yet it is treated as tho its no thing.</p>
+
+<ul>
+<li>Chef/Puppet trade off heaps of memory for ease of use</li>
+<li>90% of the time the daemon isn&#8217;t doing anything except chewing on memory</li>
+</ul>
+
+
+<p>Granted I run chef on a cron schedule so it only eats what it needs for a run, and the fork mode solves some of the leaking issues it used to have. Fundamentally tho these issues are side-effect of using ruby or any other high level lang that wants to treat memory like shit.</p>
+
+<p>I got no constructive Ideas here other than write your shit in a systems language when its meant to be a systems service. (not really constructive more curmudgeon, but yea)</p>
+
+<h3>Supervising the Supervisors</h3>
+
+<p>So yea, Chef and puppet etc.. like to watch services for state. Most distros today implement service supervision in one way or the other (upstart/systemd/systemd). Yet our frameworks aren&#8217;t plugging into this system for service management in a direct way. Instead they are executing shell scripts to interrogate state. Never mind the fact that they are polling said state when some of those supervisors support subscriptions for notifications.</p>
+
+<p>Init scripts are imperative. Supervisors and CM want to be declarative systems. I think some issues arise because of the conflict in these approaches.</p>
+
+<ul>
+<li>Our service infra should not poll.</li>
+<li>Our Config Management should subscribe to services.</li>
+<li>Init scripts should die</li>
+</ul>
+
+
+<p>Maybe the 2 systems really could be merged in some way they are both doing so much of the same things.</p>
+
+<h3>Notifications > Poll</h3>
+
+<p>srsly</p>
+
+<h3>Package Managers are not Config management</h3>
+
+<p>This one was hot on the chef list recently. A package manger is something we did before we had awesome ways to manage all our configuration state. They are also a way to deliver a binary with its configuration setup in a way that should mean the binary will run. Unfortunately they have their own opinions on this, and frequently that clashes with the goal of the Config management framework.</p>
+
+<ul>
+<li>Packages are not CM</li>
+<li>CM can be a packager tho.</li>
+</ul>
+
+
+<h3>The network is the computer</h3>
+
+<p>Sun was right. Look at where we are today with Infra and Platform services. I want my systems to be aware of one another in a deep way. Not by some overarching orchestration framework. I don&#8217;t need a distro for my laptop I need one for my datacenter that isn&#8217;t a pile of shit.</p>
+
+<p>I want my distro to only have what it needs to do the thing its doing, and nothing more. When those needs change it should be able to get to that state without issue. Possibly talking to it&#8217;s neighbors.</p>
+
+<ul>
+<li>Would be nice to see promise theory baked in</li>
+<li>Torrent as a basic service</li>
+</ul>
+
+
+<h3>Dep Hell</h3>
+
+<p>Everyone who has used any packager or any programing language knows this. Cfg Management can help in some ways by building abstractions over the dependencies, and obfuscating the pain to a point. Even the management tools in this scenario fall victim to dephell. A good example from chef land. I need to pull an apt cookbook to manage a yum based system.. Now I understand why, and the root cause within chef and the metadata that leads to this. I also understand that this is not really an issue when it comes to how the recipes are evaluated, but it still makes me upset/uneasy.</p>
+
+<p>Source based distros get around this in a heavy handed way, but it is my experience that they tend to have less issues than binary distros. Tho this is anecdotal. As is this entire rant I am calling a blog post.</p>
+
+<ul>
+<li>there has to be a better way</li>
+</ul>
+
+
+<h3>Too Much central Bullshit</h3>
+
+<p>Everyone likes to build central management of things. Central monitoring. Central aggregation of logs.  This just doesn&#8217;t play in the scale game very well. It lends to management and scaling pains.</p>
+
+<ul>
+<li>there has to be a better way</li>
+</ul>
+
+
+<h3>Everything is shoe-string</h3>
+
+<p>Scripts on Scripts on Scripts all glued together with python/ruby does not a system make.  :\</p>
+
+<ul>
+<li>there has to be a better way</li>
+</ul>
+
+
+<h2>My Ideas</h2>
+
+<p>Aside from the ideas in the rant, I have these other rough ideas rolling around in my noggin, and I feel its good to get them out. Again mostly ranting, and notes to self.</p>
+
+<h3>Hackers are Smart</h3>
+
+<p>Maybe they can teach us stuff
+When you look at many of the botnets out there. They have some really admirable qualities. I mean heres complex networks of machines working together with pretty minimal C&amp;C, and across very hostile and turbulent environments. Why aren&#8217;t we using more of this shit in Datacenters for good, not evil!
+Look at these qualities:
+* Distributed Without control nodes
+* C&amp;C is propagated
+* Neighbor discovery Confidence <em>possible &#8220;infection&#8221; to other machines</em>
+* Fallback to Non Distrib C&amp;C in fail modes (using twitter/irc etc to send C&amp;C to your infra. err Botnet)</p>
+
+<h3>One Config FrameWork to Rule them All</h3>
+
+<ul>
+<li>Systems languages are not hip, but they exist for a reason.</li>
+<li>LFS/DSL based distro</li>
+<li>Merge CM and Init</li>
+<li>Leverage services Notification system
+** s6 or  Systemd  (both have service bus arch)</li>
+<li>Notifications on state change</li>
+<li>Registration of new services</li>
+<li>Init -> Calls CM for service actions</li>
+<li>Canonical file changes should notify the CM.</li>
+<li>CM doesn&#8217;t even stat files unless FS event has been triggered</li>
+</ul>
+
+
+<p>This makes our basic OS so much smarter than stupid init scrips</p>
+
+<h3>Merge the Packager and The CM ?</h3>
+
+<p>Everyone is CI Pimpin&#8217; why cant we just build the whole fucking OS. (especially if its tiny) and described in CM.</p>
+
+<p>Chef already has the basic resources (ark) to be a packager, and produce binaries that could be disted out. Whole thing could sit on github.</p>
+
+<p>In this scenario I imagine chef (or something like it) describing exactly what a system should be. I.e. packages and package deps. The entire enchilada, but this enchilada is pretty small to be fair. The entire distro is then assembled from a stage2 bootstrap up to &#8220;base&#8221;. This process is built publicly on Travis or something akin to this. No releases. Just the CI distro.</p>
+
+<h3>Brew Rocks</h3>
+
+<p>Can&#8217;t we just do that for everything.  Or kinda. I mean just make it super simple and easy to write recipes. Something like a brew + chef or some wacky way to define a packages build flags and deps, but integrated in the config management that sits at the center of this new Un-Distro.</p>
+
+<h4>Why?</h4>
+
+<ul>
+<li>Isolation of Versions (kegs)</li>
+<li>Multiple lib versions</li>
+<li>Just Fuckin Works (most the time)</li>
+</ul>
+
+
+<h4>Weaknesses</h4>
+
+<ul>
+<li>Rollback</li>
+<li>No Partial upgrades (but srsly just redeploy)</li>
+</ul>
+
+
+<h3>Ok Ok binaries have a place.</h3>
+
+<p>lets manage those independent of configs then</p>
+
+<p>CI + Metarepo? + CM</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/11/01/chef-sandbox-chef-server-auto-playground/">Chef-sandbox: Chef-server Playground</a></h1>
     
     
@@ -113,7 +330,7 @@
 
 <p><strong>Second</strong> I want to say that Tim Dysinger&#8217;s <a href="https://github.com/dysinger/chef-box">chef-box</a> was what gave me the idea, and this is largely borrowed from the concept he started there, but with Berkshelf, Vagrant chef provisioner, and cookbooks instead of custom scripts.</p>
 
-<p>This is a tiny (git repo)[https://github.com/spheromak/chef-sandbox] that you can check out, run vagrant, and have a working chef-server and client up in no time. I am using this right now as a skeleton for testing and developing other things. It uses <a href="http://berkshelf.com">Berkshelf</a> and <a href="http://vagrantup.com">Vagrant</a> with minor special sauce for managing client/validation keys and knife configs.</p>
+<p>This is a tiny <a href="https://github.com/spheromak/chef-sandbox">git repo</a> that you can check out, run vagrant, and have a working chef-server and client up in no time. I am using this right now as a skeleton for testing and developing other things. It uses <a href="http://berkshelf.com">Berkshelf</a> and <a href="http://vagrantup.com">Vagrant</a> with minor special sauce for managing client/validation keys and knife configs.</p>
 
 <h1>Why?</h1>
 
@@ -608,6 +825,10 @@ Codes up on <a href="https://github.com/spheromak/knife-xapi">github</a></p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/11/18/thoughts-on-distros/">Thoughts on the State of the Distro and Config Management</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/11/01/chef-sandbox-chef-server-auto-playground/">chef-sandbox: chef-server playground</a>
       </li>
     
@@ -621,10 +842,6 @@ Codes up on <a href="https://github.com/spheromak/knife-xapi">github</a></p>
     
       <li class="post">
         <a href="/blog/2011/12/10/octopressed/">Octopressed</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/11/02/xenserver-and-shadow-passwords/">XenServer and shadow passwords</a>
       </li>
     
   </ul>
@@ -695,7 +912,7 @@ Codes up on <a href="https://github.com/spheromak/knife-xapi">github</a></p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Jesse Nelson -
+  Copyright &copy; 2013 - Jesse Nelson -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

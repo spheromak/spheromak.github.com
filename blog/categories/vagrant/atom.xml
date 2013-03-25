@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vagrant | f00bar.com]]></title>
   <link href="http://spheromak.github.com/blog/categories/vagrant/atom.xml" rel="self"/>
   <link href="http://spheromak.github.com/"/>
-  <updated>2012-11-01T23:26:47-07:00</updated>
+  <updated>2013-03-25T15:43:07-07:00</updated>
   <id>http://spheromak.github.com/</id>
   <author>
     <name><![CDATA[Jesse Nelson]]></name>
@@ -24,7 +24,7 @@
 
 <p><strong>Second</strong> I want to say that Tim Dysinger's <a href="https://github.com/dysinger/chef-box">chef-box</a> was what gave me the idea, and this is largely borrowed from the concept he started there, but with Berkshelf, Vagrant chef provisioner, and cookbooks instead of custom scripts.</p>
 
-<p>This is a tiny (git repo)[https://github.com/spheromak/chef-sandbox] that you can check out, run vagrant, and have a working chef-server and client up in no time. I am using this right now as a skeleton for testing and developing other things. It uses <a href="http://berkshelf.com">Berkshelf</a> and <a href="http://vagrantup.com">Vagrant</a> with minor special sauce for managing client/validation keys and knife configs.</p>
+<p>This is a tiny <a href="https://github.com/spheromak/chef-sandbox">git repo</a> that you can check out, run vagrant, and have a working chef-server and client up in no time. I am using this right now as a skeleton for testing and developing other things. It uses <a href="http://berkshelf.com">Berkshelf</a> and <a href="http://vagrantup.com">Vagrant</a> with minor special sauce for managing client/validation keys and knife configs.</p>
 
 <h1>Why?</h1>
 

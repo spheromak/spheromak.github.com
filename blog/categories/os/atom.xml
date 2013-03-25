@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Chef | f00bar.com]]></title>
-  <link href="http://spheromak.github.com/blog/categories/chef/atom.xml" rel="self"/>
+  <title><![CDATA[Category: OS | f00bar.com]]></title>
+  <link href="http://spheromak.github.com/blog/categories/os/atom.xml" rel="self"/>
   <link href="http://spheromak.github.com/"/>
   <updated>2013-03-25T15:43:07-07:00</updated>
   <id>http://spheromak.github.com/</id>
