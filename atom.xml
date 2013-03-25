@@ -4,7 +4,7 @@
   <title><![CDATA[f00bar.com]]></title>
   <link href="http://spheromak.github.com/atom.xml" rel="self"/>
   <link href="http://spheromak.github.com/"/>
-  <updated>2013-03-25T15:51:29-07:00</updated>
+  <updated>2013-03-25T15:57:12-07:00</updated>
   <id>http://spheromak.github.com/</id>
   <author>
     <name><![CDATA[Jesse Nelson]]></name>
@@ -141,11 +141,15 @@ Instead Why can&#8217;t we plug these things into the OS&#8217;s file event noti
 <p>Maybe they can teach us stuff</p>
 
 <p>When you look at many of the botnets out there. They have some really admirable qualities. I mean heres complex networks of machines working together with pretty minimal C&amp;C, and across very hostile and turbulent environments. Why aren&#8217;t we using more of this shit in Datacenters for good, not evil!
-Look at these qualities:
-* Distributed Without control nodes
-* C&amp;C is propagated
-* Neighbor discovery Confidence <em>possible &#8220;infection&#8221; to other machines</em>
-* Fallback to Non Distrib C&amp;C in fail modes (using twitter/irc etc to send C&amp;C to your infra. err Botnet)</p>
+Look at these qualities:</p>
+
+<ul>
+<li>Distributed Without control nodes</li>
+<li>C&amp;C is propagated</li>
+<li>Neighbor discovery Confidence <em>possible &#8220;infection&#8221; to other machines</em></li>
+<li>Fallback to Non Distrib C&amp;C in fail modes (using twitter/irc etc to send C&amp;C to your infra. err Botnet)</li>
+</ul>
+
 
 <h3>One Config FrameWork to Rule them All</h3>
 
